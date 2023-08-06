@@ -30,7 +30,7 @@ public class MainWindow : Window, IDisposable
 
     public void Dispose()
     {
-        
+
     }
 
     public unsafe override void Draw()
@@ -48,6 +48,10 @@ public class MainWindow : Window, IDisposable
 
         uint objectID = currentObject->ObjectID;
 
+        ulong targetID = plCharacter->PlayerTargetObjectID;
+
+        ImGui.Text($"Target ID: {targetID}");
+
         int minionID = -1;
         string minionName = "[ERROR]";
         if (plCompanion != null)
@@ -59,7 +63,7 @@ public class MainWindow : Window, IDisposable
         }
         ImGui.Text($"Your Minion has the ID of: {minionID} with the name: {minionName}");
         ImGui.Text($"Battle Pet Data: ");
-        for (int i = 0; i < 5000; i++)
+        for (int i = 0; i < 1000; i++)
         {
             GameObject* currentObject2 = GameObjectManager.GetGameObjectByIndex(i);
             if (currentObject2 == null) continue;
@@ -67,12 +71,33 @@ public class MainWindow : Window, IDisposable
             Character* plCharacter2 = (Character*)currentObject2;
             if (plCharacter2 == null) continue;
 
-            if(currentObject2->OwnerID == objectID)
+            if (currentObject2->OwnerID == objectID)
             {
                 Utf8String str = new Utf8String();
                 str.SetString(plCharacter2->GameObject.Name);
                 minionName = str.ToString();
                 ImGui.Text($"Your BattlePet has the ID of: {plCharacter2->CharacterData.ModelCharaId} with the name: {minionName}");
+            }
+        }
+
+        if (targetID != 0)
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                GameObject* currentObject2 = GameObjectManager.GetGameObjectByIndex(i);
+                if (currentObject2 == null) continue;
+
+                Character* plCharacter2 = (Character*)currentObject2;
+                if (plCharacter2 == null) continue;
+
+
+                if (currentObject2->OwnerID == targetID)
+                {
+                    Utf8String str = new Utf8String();
+                    str.SetString(plCharacter2->GameObject.Name);
+                    minionName = str.ToString();
+                    ImGui.Text($"Target BattlePet has the ID of: {plCharacter2->CharacterData.ModelCharaId} with the name: {minionName}");
+                }
             }
         }
     }
