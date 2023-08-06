@@ -5,5 +5,7 @@
     "Description": "Help Glyceri out :D",
     "InternalName": "PetRenamerDevTools",
     "ApplicableVersion": "any",
-    "Tags": []
+    "Tags": [],
+    "IconUrl": "https://github.com/Glyceri/PetRenamer-DevTools/raw/main/icon.png",
+    "RepoUrl": "https://github.com/Glyceri/PetRenamer-DevTools"
 }
