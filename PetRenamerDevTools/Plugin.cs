@@ -1,7 +1,6 @@
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
 using SamplePlugin.Windows;
 
@@ -10,14 +9,14 @@ namespace SamplePlugin
     public sealed class Plugin : IDalamudPlugin
     {
         public string Name => "PetRenamer Dev Tools";
-        private const string CommandName = "/pmycommand";
+        private const string CommandName = "/petdev";
 
         private DalamudPluginInterface PluginInterface { get; init; }
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("PetRenamer DevTools");
 
-        private ConfigWindow ConfigWindow { get; init; }
+
         private MainWindow MainWindow { get; init; }
 
         public Plugin(
@@ -30,26 +29,22 @@ namespace SamplePlugin
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
 
-            ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this);
             
-            WindowSystem.AddWindow(ConfigWindow);
             WindowSystem.AddWindow(MainWindow);
 
             this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "A useful message to display in /xlhelp"
+                HelpMessage = "Use /petdev  to initialize the development window"
             });
 
             this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
         public void Dispose()
         {
             this.WindowSystem.RemoveAllWindows();
             
-            ConfigWindow.Dispose();
             MainWindow.Dispose();
             
             this.CommandManager.RemoveHandler(CommandName);
@@ -57,18 +52,12 @@ namespace SamplePlugin
 
         private void OnCommand(string command, string args)
         {
-            // in response to the slash command, just display our main ui
-            MainWindow.IsOpen = true;
+            MainWindow.IsOpen = !MainWindow.IsOpen;
         }
 
         private void DrawUI()
         {
             this.WindowSystem.Draw();
-        }
-
-        public void DrawConfigUI()
-        {
-            ConfigWindow.IsOpen = true;
         }
     }
 }
